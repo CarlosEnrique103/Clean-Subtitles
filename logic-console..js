@@ -25,7 +25,6 @@ try {
         return item;
       }
     });
-    console.log(newArr);
     fs.writeFile(path, newArr.join("").trim(), err => {
       if(err) {
         return;

@@ -1,13 +1,15 @@
 
-let inputFile = content = newContent = download = null;
+let inputFile = content = newContent = download = subtitleContent = null;
+
+const createFile = () => {
+  let file = new File([subtitleContent], "newSubtitle.srt", {
+    type: "text/plain",
+  })
+  console.log(file);
+}
 
 const cleanSubtitle = (data) => {
-
   let text = data.split(/\n/g);
-  // split the contents by new line
-  // let space = /\s/g;
-  // let text = data.replace(space, "");
-  // console.log(text);
   let newData = text.filter(line => line.length !== 1);
   let arr = [];
   for (let i = 0; i < newData.length; i++) {
@@ -25,9 +27,6 @@ const cleanSubtitle = (data) => {
   return newArr.join("").trim();
 }
 
-
-
-
 const loadData = (e) => {
   const file = e.target.files[0];
   const reader = new FileReader();
@@ -35,7 +34,7 @@ const loadData = (e) => {
     console.log(reader.result);
     const data = reader.result;
     content.innerHTML = data;
-    newContent.innerHTML = cleanSubtitle(data); 
+    subtitleContent = newContent.innerHTML = cleanSubtitle(data); 
   }
   reader.readAsBinaryString(file);
 }
@@ -44,13 +43,16 @@ const listeners = () => {
   inputFile.addEventListener('change', (e) => {
     loadData(e);
   })
+  download.addEventListener('click', () => {
+    createFile()
+  })
 }
 
 const init = () => {
   inputFile = document.querySelector(".input-file");
   content = document.querySelector(".content");
   newContent = document.querySelector(".new-content");
-  download = document.querySelector(".button-download");
+  download = document.querySelector(".btn-download");
   listeners();
 }
 
