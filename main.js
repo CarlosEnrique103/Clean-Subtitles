@@ -13,8 +13,9 @@ const createFile = () => {
   // reader.readAsBinaryString(file);
   filesNames.forEach(file => {
     let btn = document.createElement("a");
-    btn.setAttribute("href", `data:text/plain;charset=utf-8,${encodeURIComponent(file.data)}`);
-    btn.setAttribute("download", file.name);
+    let name = file.name.replace(/.srt/i, ".vtt");
+    btn.setAttribute("href", `data:text/vtt;charset=utf-8,${encodeURIComponent(file.data)}`);
+    btn.setAttribute("download", name);
     btn.style.display = "none";
     document.body.appendChild(btn);
     btn.click();
@@ -45,6 +46,7 @@ const loadData = (e) => {
   const files = [...e.target.files];
   files.forEach(file => {
     const reader = new FileReader();
+    console.log(file);
     reader.onloadend = () => {
       const data = reader.result;
       content.innerHTML = data;
