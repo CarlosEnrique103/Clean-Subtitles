@@ -1,6 +1,6 @@
 
-let fileName = inputFile = content = newContent = download = subtitleContent = null;
-
+let inputFile = content = newContent = download = subtitleContent = null;
+let filesNames = [];
 const createFile = () => {
   // let file = new File([subtitleContent], "newSubtitle.srt", {
   //   type: "text/plain",
@@ -11,13 +11,15 @@ const createFile = () => {
   //   console.log(reader.result);
   // }
   // reader.readAsBinaryString(file);
-  let btn = document.createElement("a");
-  btn.setAttribute("href", `data:text/plain;charset=utf-8,${encodeURIComponent(subtitleContent)}`);
-  btn.setAttribute("download", fileName);
-  btn.style.display = "none";
-  document.body.appendChild(btn);
-  btn.click();
-  document.body.removeChild(btn);
+  filesNames.forEach(file => {
+    let btn = document.createElement("a");
+    btn.setAttribute("href", `data:text/plain;charset=utf-8,${encodeURIComponent(file.data)}`);
+    btn.setAttribute("download", file.name);
+    btn.style.display = "none";
+    document.body.appendChild(btn);
+    btn.click();
+    document.body.removeChild(btn);
+  })
 }
 
 const cleanSubtitle = (data) => {
@@ -40,16 +42,21 @@ const cleanSubtitle = (data) => {
 }
 
 const loadData = (e) => {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-  
-  reader.onloadend = () => {
-    const data = reader.result;
-    content.innerHTML = data;
-    subtitleContent = newContent.innerHTML = cleanSubtitle(data);
-    fileName = file.name; 
-  }
-  reader.readAsBinaryString(file);
+  const files = [...e.target.files];
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const data = reader.result;
+      content.innerHTML = data;
+      subtitleContent = newContent.innerHTML = cleanSubtitle(data);
+      fileName = file.name; 
+      filesNames.push({
+        name: file.name,
+        data: cleanSubtitle(data)
+      })
+    }
+    reader.readAsBinaryString(file);
+  });
 }
 
 const listeners = () => {
