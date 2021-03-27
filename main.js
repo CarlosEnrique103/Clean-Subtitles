@@ -1,11 +1,23 @@
 
-let inputFile = content = newContent = download = subtitleContent = null;
+let fileName = inputFile = content = newContent = download = subtitleContent = null;
 
 const createFile = () => {
-  let file = new File([subtitleContent], "newSubtitle.srt", {
-    type: "text/plain",
-  })
-  console.log(file);
+  // let file = new File([subtitleContent], "newSubtitle.srt", {
+  //   type: "text/plain",
+  // })
+  // console.log(file);
+  // const reader = new FileReader();
+  // reader.onloadend = () => {
+  //   console.log(reader.result);
+  // }
+  // reader.readAsBinaryString(file);
+  let btn = document.createElement("a");
+  btn.setAttribute("href", `data:text/plain;charset=utf-8,${encodeURIComponent(subtitleContent)}`);
+  btn.setAttribute("download", fileName);
+  btn.style.display = "none";
+  document.body.appendChild(btn);
+  btn.click();
+  document.body.removeChild(btn);
 }
 
 const cleanSubtitle = (data) => {
@@ -30,11 +42,12 @@ const cleanSubtitle = (data) => {
 const loadData = (e) => {
   const file = e.target.files[0];
   const reader = new FileReader();
+  
   reader.onloadend = () => {
-    console.log(reader.result);
     const data = reader.result;
     content.innerHTML = data;
-    subtitleContent = newContent.innerHTML = cleanSubtitle(data); 
+    subtitleContent = newContent.innerHTML = cleanSubtitle(data);
+    fileName = file.name; 
   }
   reader.readAsBinaryString(file);
 }
